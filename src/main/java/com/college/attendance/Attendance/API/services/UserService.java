@@ -53,8 +53,8 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void changePassword(long id, ChangePasswordDto dto) {
-        User user = userRepository.findById(id)
+    public void changePassword(String code, ChangePasswordDto dto) {
+        User user = userRepository.findByStudentCode(code)
                 .orElseThrow(() -> new UserNotFoundException(userNotFoundMessage));
 
 
@@ -113,5 +113,27 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByStudentCode(username).orElseThrow(()->new UserNotFoundException(userNotFoundMessage));
 
+    }
+
+    public RecordAttendanceDto attendManually(Long doctorId , AttendManually attendManually){
+        var student =userRepository.findByStudentCode( attendManually.getStudentCode()).orElseThrow(() ->new UserNotFoundException(userNotFoundMessage));
+        var doctor = userRepository.findById(doctorId).orElseThrow(()->new UserNotFoundException(userNotFoundMessage));
+        var lecture = lectureRepository.findById(attendManually.getLectureId())
+                .orElseThrow(()->new LectureNotFoundException("Lecture was not found"));
+        if (!lecture.getDoctor().getId().equals(doctorId)) {
+            throw new AuthorizationException("Doctor is not authorized to control this lecture.");
+        }
+
+        if (attendanceRecordRepository.existsByStudentAndLecture(student, lecture)) {
+            throw new AttendanceAlreadyRecordedException("Attendance already recorded for this lecture.");
+        }
+        AttendanceRecord record = new AttendanceRecord();
+        record.setStudent(student);
+        record.setLecture(lecture);
+        record.setRecordedAt(LocalDateTime.now());
+
+        AttendanceRecord savedRecord = attendanceRecordRepository.save(record);
+
+        return attendanceRecordMapper.toDto(savedRecord);
     }
 }

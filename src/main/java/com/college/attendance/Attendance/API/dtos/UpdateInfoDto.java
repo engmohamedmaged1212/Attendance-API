@@ -9,6 +9,6 @@ public class UpdateInfoDto {
     @Email(message = "الايميييييييييييل يا معلم")
     String email;
     @NotNull(message = "باسورد وياريت متنساهوش")
-    @Min(message = "ايه الباسورد العبيط ده" , value = 8)
+    @Size(min = 6, message = "ايه الباسورد العبيط ده، يجب أن لا يقل عن 6 أحرف")
     String newPassword ;
 }

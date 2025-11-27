@@ -70,10 +70,10 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user/register").permitAll()
-
-
-
+                        .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/change-password").permitAll()
+                        .requestMatchers("/users/{studentCode}/get-email").permitAll()
+                        .requestMatchers("/users/get-email").permitAll()
 
                         .anyRequest().authenticated()
                 )

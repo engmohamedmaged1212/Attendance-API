@@ -7,8 +7,6 @@ CREATE TABLE users
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
     name          VARCHAR(255) NOT NULL,
     email         VARCHAR(255) NOT NULL UNIQUE,
-    -- 'student_code' هو الـ ID بتاع الكلية (s4020...)
-    -- هيكون NULL لو المستخدم ده دكتور
     student_code  VARCHAR(50) UNIQUE,
     password      VARCHAR(255) NOT NULL,
     role          ENUM('STUDENT', 'DOCTOR') NOT NULL,

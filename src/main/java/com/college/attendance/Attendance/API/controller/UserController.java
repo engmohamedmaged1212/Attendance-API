@@ -2,6 +2,9 @@ package com.college.attendance.Attendance.API.controller;
 
 import com.college.attendance.Attendance.API.dtos.*;
 import com.college.attendance.Attendance.API.entities.User;
+import com.college.attendance.Attendance.API.exception.AuthorizationException;
+import com.college.attendance.Attendance.API.exception.LectureNotFoundException;
+import com.college.attendance.Attendance.API.exception.UserNotFoundException;
 import com.college.attendance.Attendance.API.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -9,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,41 +34,47 @@ public class UserController {
     }
 
     @PutMapping("/me/update-info")
-    public ResponseEntity<Void> updateInfo(@Valid UpdateInfoDto updateInfoDto , @AuthenticationPrincipal User user){
+    public ResponseEntity<Void> updateInfo(@Valid @RequestBody UpdateInfoDto updateInfoDto , @AuthenticationPrincipal User user){
         userService.updateInfo(updateInfoDto , user.getId());
         return ResponseEntity.ok().build();
     }
-    @PreAuthorize("hasRole('DOCTOR')")
-    @PostMapping("/{studentId}/change-password")
+
+
+    @PostMapping("/change-password")
     public ResponseEntity<Void> changeMyPassword(
-            @Valid @RequestBody ChangePasswordDto changePasswordDto,
-            @PathVariable long studentId
+            @Valid @RequestBody ChangePasswordDto changePasswordDto
     ) {
-        userService.changePassword(studentId, changePasswordDto);
+        userService.changePassword(changePasswordDto.getStudentCode(), changePasswordDto);
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody
-    RegisterStudentDto registerStudentDto){
+    public ResponseEntity<UserDto> register(@Valid @RequestBody RegisterStudentDto registerStudentDto){
         var userDto = userService.createStudent(registerStudentDto);
         return ResponseEntity.ok(userDto);
     }
+
     @PostMapping("/attend")
     @PreAuthorize("hasRole('STUDENT')")
     public ResponseEntity<RecordAttendanceDto> attend(
-
             @Valid @RequestBody AttendRequestDto attendRequestDto,
-
-
             @AuthenticationPrincipal User user
     ) {
-
-        if (user == null || user.getId() == null) {
-            System.out.println("problem from controller");
+        if (user == null) {
+            System.out.println("problem from controller - UserDetails is null");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Long studentId = user.getId();
-        RecordAttendanceDto attendanceRecord = userService.attend(attendRequestDto, studentId);
+        RecordAttendanceDto attendanceRecord = userService.attend(attendRequestDto, user.getId());
         return ResponseEntity.ok(attendanceRecord);
+    }
+    @GetMapping("/{studentCode}/get-email")
+    public ResponseEntity<GetEmailResponseDto> getEmail(@PathVariable String  studentCode){
+        var email = userService.findStudentEmailByCode(studentCode);
+        return ResponseEntity.ok(new GetEmailResponseDto(email));
+    }
+    @PreAuthorize("hasRole('DOCTOR')")
+    @PutMapping("/attend-manually")
+    public ResponseEntity<?> attendManually(@Valid @RequestBody AttendManually request , @AuthenticationPrincipal User doctor){
+       return ResponseEntity.accepted().body( userService.attendManually(doctor.getId(),  request));
     }
 }
