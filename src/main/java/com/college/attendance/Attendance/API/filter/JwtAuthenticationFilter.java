@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -63,13 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            UserDetails userDetails = org.springframework.security.core.userdetails.User
-                    .withUsername(user.getStudentCode())
-                    .password(user.getPassword())
-                    .authorities("ROLE_" + role)
-                    .build();
-
-            var authentication = new UsernamePasswordAuthenticationToken(
+      var authentication = new UsernamePasswordAuthenticationToken(
                     user,
                     null,
                     List.of(new SimpleGrantedAuthority("ROLE_" + role))

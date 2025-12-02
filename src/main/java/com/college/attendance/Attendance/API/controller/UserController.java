@@ -2,9 +2,6 @@ package com.college.attendance.Attendance.API.controller;
 
 import com.college.attendance.Attendance.API.dtos.*;
 import com.college.attendance.Attendance.API.entities.User;
-import com.college.attendance.Attendance.API.exception.AuthorizationException;
-import com.college.attendance.Attendance.API.exception.LectureNotFoundException;
-import com.college.attendance.Attendance.API.exception.UserNotFoundException;
 import com.college.attendance.Attendance.API.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -12,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

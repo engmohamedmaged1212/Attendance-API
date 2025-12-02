@@ -1,6 +1,7 @@
 package com.college.attendance.Attendance.API.services;
 
 import com.college.attendance.Attendance.API.dtos.*;
+import com.college.attendance.Attendance.API.entities.User;
 import com.college.attendance.Attendance.API.exception.AuthorizationException;
 import com.college.attendance.Attendance.API.exception.LectureNotFoundException;
 import com.college.attendance.Attendance.API.exception.UserNotFoundException;
@@ -51,6 +52,12 @@ public class LectureService {
         }
         return lecture.getAttendanceRecords().stream()
                 .map(lectureMapper::toRecordInfoDto).toList();
+    }
+
+    public List<LectureInfoDto> getLecturesForDr(Long doctorId){
+        userRepository.findById(doctorId).orElseThrow(()->new UserNotFoundException(userNotFoundMessage));
+        var lectures = lectureRepository.findAllByDoctorId(doctorId);
+        return lectures.stream().map(lectureMapper::toLectureInfoDto).toList();
     }
 
 }

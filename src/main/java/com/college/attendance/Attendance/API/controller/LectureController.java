@@ -1,6 +1,7 @@
 package com.college.attendance.Attendance.API.controller;
 
 import com.college.attendance.Attendance.API.dtos.EndLectureRequestDto;
+import com.college.attendance.Attendance.API.dtos.LectureInfoDto;
 import com.college.attendance.Attendance.API.dtos.LectureRequestDto;
 import com.college.attendance.Attendance.API.entities.User;
 import com.college.attendance.Attendance.API.services.LectureService;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("lectures")
@@ -45,4 +48,10 @@ public class LectureController {
         var records = lectureService.recordsForLecture(lectureId , user.getId());
         return ResponseEntity.ok(records);
     }
+
+    @GetMapping("get-all-lectures")
+    public ResponseEntity<List<LectureInfoDto>> getAllLecturesForDr(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(lectureService.getLecturesForDr(user.getId()));
+    }
+
 }

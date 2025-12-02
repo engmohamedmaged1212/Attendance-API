@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -89,20 +88,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // السماح بالطلبات من أي مكان (ضروري لـ ngrok)
         configuration.setAllowedOrigins(List.of("*"));
-
-        // السماح بكل الميثودات
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-        // السماح بكل الهيدرز (زي Authorization)
         configuration.setAllowedHeaders(List.of("*"));
 
-        // (اختياري) السماح بإرسال الكوكيز
-        // configuration.setAllowCredentials(true);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // تطبيق الإعدادات دي على كل المسارات
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
