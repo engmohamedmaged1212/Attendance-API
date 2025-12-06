@@ -1,8 +1,6 @@
 package com.college.attendance.Attendance.API.controller;
 
-import com.college.attendance.Attendance.API.dtos.EndLectureRequestDto;
-import com.college.attendance.Attendance.API.dtos.LectureInfoDto;
-import com.college.attendance.Attendance.API.dtos.LectureRequestDto;
+import com.college.attendance.Attendance.API.dtos.*;
 import com.college.attendance.Attendance.API.entities.User;
 import com.college.attendance.Attendance.API.services.LectureService;
 import jakarta.validation.Valid;
@@ -54,4 +52,9 @@ public class LectureController {
         return ResponseEntity.ok(lectureService.getLecturesForDr(user.getId()));
     }
 
+    @PostMapping("/get-sheet")
+    public ResponseEntity<List<LectureAttendanceDto>> getRecordsForLectures(@RequestBody @Valid LecturesIdsListRequestDto request, @AuthenticationPrincipal User user){
+        var response = lectureService.getRecordsForLectures(request, user.getId());
+        return ResponseEntity.ok(response);
+    }
 }

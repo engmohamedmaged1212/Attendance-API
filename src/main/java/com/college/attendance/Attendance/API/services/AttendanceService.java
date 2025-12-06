@@ -25,23 +25,19 @@ public class AttendanceService {
 
         Lecture lecture = lectureRepository.findById(lectureId)
                 .orElseThrow(() -> new LectureNotFoundException("Lecture not found with id: " + lectureId));
-
-
         Optional<AttendanceRecord> existingRecord = attendanceRecordRepository
                 .findByStudentIdAndLectureId(student.getId(), lectureId);
 
         if (existingRecord.isPresent()) {
             throw new IllegalStateException("You have already attended this lecture.");
         }
-
-
          AttendanceRecord newRecord = AttendanceRecord.builder()
                 .student((student))
                 .lecture(lecture)
                 .status(AttendanceStatus.PRESENT)
                 .build();
-
-
         attendanceRecordRepository.save(newRecord);
     }
+
+
 }

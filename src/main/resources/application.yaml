@@ -11,7 +11,7 @@ spring:
       ddl-auto: update
   flyway:
     enabled: true
-    locations: classpath:db/migration     # ✅ ضيف السطر ده
+    locations: classpath:db/migration
 jwt:
   secret: ${JWT_SECRET}
   accessTokenExpiration : 28800 #8h

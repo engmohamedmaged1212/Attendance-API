@@ -9,6 +9,4 @@ public class AttendanceApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AttendanceApiApplication.class, args);
 	}
-///  public
 }
-//mohamedmaged
