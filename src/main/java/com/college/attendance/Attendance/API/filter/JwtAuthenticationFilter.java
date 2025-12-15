@@ -74,10 +74,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // 4. مواصلة سلسلة الفلترة (النجاح)
+
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            // 5. في حالة فشل التحويل (مثل Role.valueOf) أو أي خطأ آخر
             System.err.println("Authentication failure after successful JWT parsing: " + e.getMessage());
             filterChain.doFilter(request, response);
         }

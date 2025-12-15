@@ -2,9 +2,9 @@ spring:
   application:
     name: Attendance-API
   datasource:
-    url: jdbc:mysql://localhost:3306/attendance_project?createDatabaseIfNotExist=true
-    username: root
-    password: Mohamed1212#
+    url: ${URL_DATABASE}
+    username: ${DATABASE_NAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     show-sql: true
     hibernate:

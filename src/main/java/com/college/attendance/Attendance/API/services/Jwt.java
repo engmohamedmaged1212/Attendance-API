@@ -17,17 +17,16 @@ public class Jwt {
     public boolean isValid(){
         return claims.getExpiration().after(new Date());
     }
-    // في كلاس Jwt.java
+
     public Long getUserId(){
         try {
             String subject = claims.getSubject();
             if (subject == null) {
-                return null; // لا يوجد Subject (ID)
+                return null;
             }
-            // تأكد من التحويل الآمن
+
             return Long.valueOf(subject);
         } catch (NumberFormatException e) {
-            // في حالة فشل تحويل 'sub' من نص إلى رقم (وهذا يجب أن لا يحدث)
             System.err.println("JWT ID PARSING ERROR: Cannot convert subject to Long: " + claims.getSubject());
             return null;
         }
